@@ -1,0 +1,56 @@
+Hello,
+<span id = "currentname">
+{{#if name}}
+{{name}}
+{{else}}
+friend
+{{/if}}
+</span>.
+
+<div id="freet-form">
+  <form action="dashboard" method="post">
+    <h2 class="input"> Have anything to say? </h2>
+    <input type="hidden" name="username" value={{#if name}}
+    {{name}}
+    {{else}}
+    "unnamed friend"
+    {{/if}} />
+    <input type="text" name="freet" id = "freetbox" class = "textinput" placeholder="This is a great website!">
+    <input type="submit"  class = "submitbutton" value="Freet!">
+  </form>
+</div>
+
+<div id = "freetfeed">
+<table class="freet-table">
+{{#each freets}}
+   <tr><td>{{username}}</td>
+   <td>{{freet}}</td>
+ <td>{{id}}</td>
+ <!-- <td><button id="del" class = "deletebutton" currentuser={{name}} data-username={{username}} value={{id}}>Delete</button></td> -->
+ <td><button id="del" class = "deletebutton" data-username = {{username}} value= {{id}}>Delete</button></td>
+</tr>
+{{/each}}
+</table>
+</div>
+
+<script>
+$(document).on("click", "#del", function () {
+
+            var currentuser = $("#currentname").text().trim();
+            var tweetauthor = $(this).attr("data-username").trim();
+            if(currentuser == tweetauthor){
+              $.ajax({
+                url: '/dashboard' + '?' + $.param({"id": $(this).attr("value")}),
+                type: 'DELETE',
+                data: {id: $(this).attr("value")},
+                success: function(result) {
+                  // Do something with the result
+                  //$(this).closest('tr').remove();
+              }
+            });
+
+          $('#freetfeed').load(document.URL +  ' #freetfeed');
+          }
+
+        });
+</script>

@@ -13,9 +13,7 @@ app.set('view engine', 'handlebars');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static('public'));
 
-app.equals = function(first, second){
-  return first == second;
-}
+
 
 app.get("/", function(req, res){
     res.render('login');
@@ -45,13 +43,13 @@ app.post("/index", function(req, res){
     name: req.body.name,
     freets: persist.getfreets()
   });
+
 });
 
 app.post("/dashboard", function(req, res){
-  var freet = persist.add(req.body.username, req.body.freet);
-  // persist.makefreet(function() {
-  //   res.json({"username": req.body.username, "freet": req.body.freet});
-  // });
+  var freet = persist.add(req.body.username, req.body.freet, function(res) {
+  console.log(res);
+});
   res.render('dashboard', {
     name: req.body.username,
     freets: persist.getfreets()
@@ -60,9 +58,6 @@ app.post("/dashboard", function(req, res){
 
 app.delete("/dashboard", function(req, res){
   var freet = persist.delete(req.body.id);
-  // persist.makefreet(function() {
-  //   res.json({"username": req.body.username, "freet": req.body.freet});
-  // });
   res.render('dashboard', {
     name: req.body.name,
     freets: persist.getfreets()
@@ -70,8 +65,9 @@ app.delete("/dashboard", function(req, res){
 });
 
 app.post("/makefreet", function(req, res){
-  //console.log("req:", req, "res:", res);
-  var freet = persist.add(req.body.username, req.body.freet);
+  var freet = persist.add(req.body.username, req.body.freet, function(res) {
+  console.log(res);
+});
   persist.makefreet(function() {
     res.json({"username": req.body.username, "freet": req.body.freet});
   });
@@ -85,15 +81,18 @@ app.delete("/deletefreet", function(req, res){
 });
 
 app.post("/freets", function(req, res) {
-  //console.log("req:", req, "res:", res);
-  var freet = persist.add(req.body.username, req.body.freet);
+  var freet = persist.add(req.body.username, req.body.freet, function(res) {
+  console.log(res);
+});
   persist.persist(function() {
-
     res.json({"username": req.body.username, "freet": req.body.freet});
   });
 });
 
+app.all('*', function(req, res) {
+    res.redirect("/");
+})
+
 app.listen(process.env.PORT || 3000, function() {
   console.log("Listening on port 3000");
 });
-

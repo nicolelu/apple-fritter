@@ -1,11 +1,5 @@
 Hello,
-<span id = "currentname">
-{{#if name}}
-{{name}}
-{{else}}
-friend
-{{/if}}
-</span>.
+<span id = "currentname">{{#if name}}{{name}}{{else}}friend{{/if}}</span>.
 
 <div id="freet-form">
   <form action="dashboard" method="post">
@@ -25,7 +19,6 @@ friend
 {{#each freets}}
    <tr><td>{{username}}</td>
    <td>{{freet}}</td>
- <td>{{id}}</td>
  <!-- <td><button id="del" class = "deletebutton" currentuser={{name}} data-username={{username}} value={{id}}>Delete</button></td> -->
  <td><button id="del" class = "deletebutton" data-username = {{username}} value= {{id}}>Delete</button></td>
 </tr>
@@ -50,7 +43,9 @@ $(document).on("click", "#del", function () {
             });
 
           $('#freetfeed').load(document.URL +  ' #freetfeed');
-          }
+        }else{
+          alert("don't delete other users' tweets! That is not very nice and would make them sad :(");
+        }
 
         });
 </script>

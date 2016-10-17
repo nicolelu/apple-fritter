@@ -15,7 +15,7 @@ body {
     padding: 2em 2em 4em;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1, h2, h3, h4, h5, h6{
     color: #fff;
     font-weight: 600;
     line-height: 1.3;
@@ -25,6 +25,12 @@ h1, h2, h3, h4, h5, h6 {
 h2 {
     margin-top: 1.3em;
     font-size: 45;
+}
+
+h6 {
+    margin-top: 10px;
+    font-size: 20;
+    color: #545454;
 }
 
 a {
@@ -60,6 +66,13 @@ table{
   font-size: 24;
   color: white;
   margin-left:50px;
+  height: auto;
+  background-color: inherit;
+}
+
+.logoutbutton{
+  font-size: 12;
+  color: white;
   height: auto;
   background-color: inherit;
 }

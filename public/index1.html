@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Fritter</title>
+        <meta name="description" content="Nicole Lu's 6.170 Personal Website">
+        <link rel="stylesheet" href="main.css">
+        <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+        <script src="./index.js"></script>
+        <!-- Handlebars Runtime -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.runtime.min.js"></script>
+        <!-- Handlebars templates -->
+        <script src="/js/templates.js"></script>
+    </head>
+    <body>
+
+        <h1>fritter</h1>
+
+        <div class="row center-column-div">
+      <div class="col-sm-8 col-sm-offset-2" id="activity-input-box">
+        <!-- Alert box indicating an error -->
+        <div class="alert alert-danger alert-dismissible" id="alert-box" role="alert">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        </div>
+
+        <!-- Input form -->
+        <div class="form-group">
+          <label for="freet">freet</label>
+          <input type="text" name="freet" class="form-control" id="freet" placeholder="I love fritter!">
+        </div>
+        <div class="form-group">
+          <label for="username">username</label>
+          <input type="text" name="username" class="form-control" id="username" placeholder="fritterlover101">
+        </div>
+        <button class="btn" id="postfreet">post freet!</button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-8 col-sm-offset-2">
+        <table id="freet-table" class="table table-striped">
+          <tr>
+            <td><b>freet</b></td>
+            <td><b>username</b></td>
+            <td><b>id</b></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    </body>
+</html>

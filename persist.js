@@ -14,10 +14,13 @@ var Persister = function(filename) {
   var freets = []
 
   try{
-    JSON.parse(fs.readFileSync(DEFAULT_FILENAME)).forEach(function(item){
+    var jsonfreets = JSON.parse(fs.readFileSync(DEFAULT_FILENAME));
+    jsonfreets.forEach(function(item){
 
       freets.push({"username": item[0], "freet": item[1], "id": item[2]});
+
     });
+    id = jsonfreets.length + 1;
   }catch(ex){
 
   };

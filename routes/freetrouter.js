@@ -91,7 +91,7 @@ router.delete("/", function(req, res, next){
  *  Retrieve all freets
  ***/
 router.get("/", function(req, res, next){
-  freet.find({}).sort({"id": -1}).exec(function(err, freetlist){
+  freet.find({}).sort({"time": -1}).exec(function(err, freetlist){
     if(err){
       console.log(err);
     }

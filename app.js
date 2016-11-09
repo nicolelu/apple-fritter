@@ -1,8 +1,6 @@
 var express = require("express");
 var handlebars = require("express-handlebars")
 var bodyParser = require('body-parser');
-var path = require("path");
-var favicon = require('serve-favicon');
 var session = require('express-session');
 var cookieParser = require('cookie-parser');
 
@@ -35,14 +33,12 @@ app.use(express.static('public'));
 
 app.all('*', function(req, res, next) {
   if(req.url == "/" && ((typeof req.session.currentuser == "undefined") || (req.session.currentuser == ""))){
-    console.log("curr user", req.session.currentuser);
     res.render("login");
   } else{
     next();
   }
 });
 
-app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', routes);
 app.use('/user', userrouter);
 app.use('/freet', freetrouter);

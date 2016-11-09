@@ -36,30 +36,26 @@ describe('logging in and creating users', function () {
 
   // This is a test, we indicate what we're testing for.
   it('Looking for a user that does not exist should not work', function () {
-    user.find({"username": "fakename1"}).exec(function(err, result){
-      if(err){
-        assert.equal(-1, [1,2,3].indexOf(5));
-      } else {
-        assert.equal(-1, 0);
+    user.findUser("fakename", function(err, result){
+      if(result == "no user" || err == false){
+        assert.equal(0, 0);
+      } else{
+        assert.equal(0, 1);
       }
     });
   });
 
   // This is a test, we indicate what we're testing for.
   it('creating a user and looking for it should work', function () {
-    user.create({
-      "username": "testname",
-      "password": "password",
-      "follows": []
-    }, function(err, doc){
+    user.createUser("testname", "password", function(err, doc){
       if(err){
         console.log(err);
       }
     });
-    user.find({"username": "testname"}).exec(function(err, result){
+    user.findUser("testname", function(err, result){
       if(err){
         assert.equal(-1, 0);
-      } else {
+      } else{
         assert.equal(result.username, "testname");
       }
     });
@@ -67,30 +63,27 @@ describe('logging in and creating users', function () {
 
   // This is a test, we indicate what we're testing for.
   it('verifying a correct password yields expected response', function () {
-    user.find({"username": "testname", "password": "password"}).exec(function(err, result){
+    user.checkPassword("testname", "wrongpassword", function(err, status){
       if(err){
-        console.log(error);
+        console.log(err);
       }
-      if(result.length < 1){
-        assert.equal(-1,0);
-      }
-      else{
-        assert.equal(result.username, "testname");
-        assert.equal(result.password, "password");
+      if(status == true){
+        assert.equal(0,0);
+      } else{
+        assert.equal(0, 1);
       }
     })
   });
 
   // This is a test, we indicate what we're testing for.
   it('verifying an incorrect password yields expected response', function () {
-    user.find({"username": "testname", "password": "wrongpassword"}).exec(function(err, result){
+    user.checkPassword("testname", "wrongpassword", function(err, status){
       if(err){
-        console.log(error);
+        console.log(err);
       }
-      if(result.length < 1){
+      if(status == false){
         assert.equal(0,0);
-      }
-      else{
+      } else{
         assert.equal(0, 1);
       }
     })
@@ -98,11 +91,7 @@ describe('logging in and creating users', function () {
 
   // This is a test, we indicate what we're testing for.
   it('Following a user should work if the user exists', function () {
-    user.create({
-      "username": "followme",
-      "password": "password",
-      "follows": []
-    }, function(err, doc){
+    user.createUser("followme", "password", function(err, doc){
       if(err){
         console.log(err);
       }
@@ -111,7 +100,7 @@ describe('logging in and creating users', function () {
       if(err){
         assert.equal(0, 1);
       } else{
-        assert.equal(result.follows[0], target);
+        assert.equal(result.follows[0], "followme");
       }
     })
   });
@@ -177,59 +166,91 @@ describe('posting tweet', function () {
 
   // This is a test, we indicate what we're testing for.
   it('Check that freet is stored in db correctly (db empty beforehand)', function () {
-    freet.create({"username": "testuser",
-                  "freet": "this is a test tweet",
-                  "time": Date.now()},
-                  function(err, r){
-                    if(err){
-                      console.log(err);
-                    }
-                });
-    freet.find({}).exec(function(err, freetlist){
+    t = Date.now();
+    freet.createFreet("testuser", "this is a test tweet", t, function(err,r){
       if(err){
         console.log(err);
       }
-      assert.equal(freetlist.length, 1);
-      //res.json({"freets": freetlist});
-    });
+    })
+
+    freet.getFreets(function(err, doc){
+      if(err){
+        console.log(err);
+      }
+      else{
+        var freet = doc[0];
+        assert.equal(doc.length, 1);
+        assert.equal(freet.username, "testuser");
+        assert.equal(freet.freet, "this is a test tweet");
+        assert.equal(freet.time, t);
+      }
+    })
   });
 
   // This is a test, we indicate what we're testing for.
   it('Check that freet is stored in db correctly (db not empty beforehand)', function () {
-    freet.create({"username": "testuser2",
-                  "freet": "this is a test tweet2",
-                  "time": Date.now()},
-                  function(err, r){
-                    if(err){
-                      console.log(err);
-                    }
-                });
-    freet.find({}).exec(function(err, freetlist){
+    t = Date.now();
+    freet.createFreet("testuser2", "this is a test tweet2", t, function(err,r){
       if(err){
         console.log(err);
       }
-      assert.equal(freetlist.length, 2);
-      //res.json({"freets": freetlist});
-    });
+    })
+    freet.getFreets(function(err, doc){
+      if(err){
+        console.log(err);
+      }
+      else{
+        var freet = doc[0];
+        assert.equal(doc.length, 2);
+        assert.equal(freet.username, "testuser2");
+        assert.equal(freet.freet, "this is a test tweet2");
+        assert.equal(freet.time, t);
+      }
+    })
   });
 
   // This is a test, we indicate what we're testing for.
   it('Check that nothing bad happens when two identical freets are stored', function () {
-    freet.create({"username": "testuser",
-                  "freet": "this is a test tweet",
-                  "time": Date.now()},
-                  function(err, r){
-                    if(err){
-                      console.log(err);
-                    }
-                });
-    freet.find({}).exec(function(err, freetlist){
+    t = Date.now();
+    freet.createFreet("testuser", "this is a test tweet", t, function(err,r){
       if(err){
         console.log(err);
       }
-      assert.equal(freetlist.length, 3);
-      //res.json({"freets": freetlist});
-    });
+    })
+    freet.getFreets(function(err, doc){
+      if(err){
+        console.log(err);
+      }
+      else{
+        var freet = doc[0];
+        assert.equal(doc.length, 1);
+        assert.equal(freet.username, "testuser");
+        assert.equal(freet.freet, "this is a test tweet");
+        assert.equal(freet.time, t);
+      }
+    })
+  });
+
+  // This is a test, we indicate what we're testing for.
+  it('Getting only tweets of users followed', function () {
+    t = Date.now();
+    freet.createFreet("testuser3", "this is a test tweet", t, function(err,r){
+      if(err){
+        console.log(err);
+      }
+    })
+    freet.getFollowingFreets(["testuser", "testuser2"], function(err, doc){
+      if(err){
+        console.log(err);
+      }
+      else{
+        var freet = doc[0];
+        assert.equal(doc.length, 3);
+        assert.equal(freet.username, "testuser");
+        assert.equal(freet.freet, "this is a test tweet");
+        assert.equal(freet.time, t);
+      }
+    })
   });
 });
 

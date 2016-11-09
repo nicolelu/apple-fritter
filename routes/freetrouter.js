@@ -11,20 +11,16 @@ router.post("/", function(req, res, next){
   var text = req.body.freet;
   var t = Date.now();
 
-  freet.create({"username": uname,
-                "freet": text,
-                "time": t},
-                function(err, r){
-                  if(err){
-                    res.json({
-                      "message": "Storing that freet didn't work. Check it and try again!" + err,
-                      "success": false
-                    });
-                  }
-                else{
-                  res.redirect('/freet/');
-                }
-              });
+  freet.createFreet(uname, text, t, function(err, doc){
+    if(err){
+      res.json({
+        "message": "Storing that freet didn't work. Check it and try again!" + err,
+        "success": false
+      });
+    } else{
+      res.redirect('/freet/');
+    }
+  })
 });
 
 /***
@@ -65,24 +61,15 @@ router.post("/rf", function(req, res, next){
  ***/
 router.delete("/", function(req, res, next){
   var id = req.body.id;
-  freet.findById(id, function(err, doc){
-    if(doc){
-      if(req.session.currentuser != doc.username){
-        res.json({
-          "message": "Sorry! You can't delete other people's freets! That would make them sad :(",
-          "success": false
-        });
-      } else{
-        freet.findByIdAndRemove(id, function(err, callback){
-          if(err){
-            res.json({
-              "message": "Sorry! Something went wrong deleting that freet :(",
-              "success": false
-            });
-          }
-          res.json({"success": true})
-        })
-      }
+
+  freet.deleteFreet(id, function(err){
+    if(err){
+      res.json({
+        "message": "Sorry! Something went wrong deleting that freet :(",
+        "success": false
+      });
+    } else{
+      res.json({"success": true})
     }
   })
 });
@@ -91,16 +78,18 @@ router.delete("/", function(req, res, next){
  *  Retrieve all freets
  ***/
 router.get("/", function(req, res, next){
-  freet.find({}).sort({"time": -1}).exec(function(err, freetlist){
-    if(err){
-      console.log(err);
+  freet.getFreets(function(err, doc){
+    if (err){
+      res.render("error", {
+        msg: "There was an error loading freets. :( Please try again!"
+      })
+    } else{
+      res.render("dashboard", {
+        name: req.session.currentuser,
+        freets: doc,
+        filterstatus: "all"
+      })
     }
-    res.render("dashboard", {
-      name: req.session.currentuser,
-      freets: freetlist,
-      filterstatus: "all"
-    })
-    //res.json({"freets": freetlist});
   });
 });
 
@@ -109,23 +98,20 @@ router.get("/", function(req, res, next){
  ***/
 router.get("/followedtweets", function(req, res, next){
   //find who this user follows
-  user.findFollows(req.session.currentuser, function(err, doc){
+  user.findFollows(req.session.currentuser, function(err, followlist){
     //get the freets from the people who are followed
-    freet.find({username:{$in: doc}}).sort({"time": -1}).exec(function(err, freetlist){
+    freet.getFollowingFreets(followlist, function(err, freetlist){
       if(err){
         res.json({
           "message": "The database sent back an error. Please try again!",
           "success": false
         })
-        // res.send("The database sent back an error. Please try again!");
-      }
-      else{
+      } else{
         res.render("dashboard", {
           name: req.session.currentuser,
           freets: freetlist,
           filterstatus: "followed"
         })
-        // res.json({"freets": freetlist});
       }
     })
   });

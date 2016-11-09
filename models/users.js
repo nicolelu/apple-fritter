@@ -30,13 +30,45 @@ userSchema.statics.findUser = function(uname, callback){
     username: uname
   },
   function(error, user){
-    if(error || !user){
+    if(error){
       callback(false, null);
-    } else{
+    }
+    else if(!user){
+      callback(false, "no user");
+    }
+    else{
       callback(true, user);
     }
   }
 );};
+
+/**
+ * Creates a user in the db
+ * @param uname: username to reserve
+ */
+userSchema.statics.createUser = function(uname, pass, callback){
+    this.findUser(uname, function(status, doc){
+      if (status == false && doc == "null"){
+        callback(false, "The database sent back an error. Please try again!");
+      }
+      else if (status == true && doc.length > 0){
+        callback(false, "Oh no, someone beat you to this username. Please try another one!");
+      }
+      else{
+        mongoose.model("User").create({
+            "username": uname,
+            "password": pass,
+            "follows": []
+        }, function(err, doc){
+          if(err){
+            callback(false, "One or both of the username and password are invalid. Please try again!");
+          } else{
+            callback(true, "success");
+          }
+        })
+      }
+    })
+};
 
 /**
  * Executes the process for one user following another user

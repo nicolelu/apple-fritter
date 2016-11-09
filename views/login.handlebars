@@ -5,7 +5,7 @@
 	<title>Login to Fritter</title>
 	<meta charset="UTF-8">
 	<link rel="stylesheet" type="text/css" href="main.css">
-	<script src="handlebars-v4.0.5.js"></script>
+	<script src="../handlebars-v4.0.5.js"></script>
 </head>
 
 <body>
@@ -14,13 +14,24 @@
 	</div>
 
 	<div id="login-form">
-		<form action="index" method="post">
-			<h2 class="input"> Throw that in this here box </h2>
-			<h6 class="input"> Space is limited, so no spaces please</h6>
+		<form action="user/index" method="post">
+			<h2 class="input"> If you already have an account, log in! </h2>
 			<input type="text" name="name" class = "textinput" placeholder="Tim">
+			<input type="text" name="password" class = "textinput" placeholder="password">
 			<input type="submit" class = "submitbutton" value="Log In">
 		</form>
 	</div>
+
+	<div id="signup-form">
+		<form action="user/newaccount" method="post">
+			<h2 class="input"> If you don't, make one! </h2>
+			<h6 class="input"> Space is limited, so no spaces please</h6>
+			<input type="text" name="name" class = "textinput" placeholder="newTim">
+			<input type="text" name="password" class = "textinput" placeholder="newPassword">
+			<input type="submit" class = "submitbutton" value="Sign Up!">
+		</form>
+	</div>
+
 </body>
 
 </html>

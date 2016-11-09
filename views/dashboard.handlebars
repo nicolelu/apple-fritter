@@ -2,12 +2,17 @@ Hello,
 <span id = "currentname">{{#if name}}{{name}}{{else}}friend{{/if}}</span>.
 
 <div id = "logout">
- <!-- <td><button id="del" class = "deletebutton" currentuser={{name}} data-username={{username}} value={{id}}>Delete</button></td> -->
  <td><button id="logout" class = "logoutbutton">log out</button></td>
 </div>
 
+<div id = "tweet-toggle">
+ <td><button id="allfreets" class = "filterbutton">All freets</button></td>
+ <td><button id="followedfreets" class = "filterbutton">Only followed freets</button></td>
+ <h6 id = "filterstatus">Now showing {{filterstatus}} freets</h6>
+</div>
+
 <div id="freet-form">
-  <form action="dashboard" method="post">
+  <form action="/freet" method="post">
     <h2 class="input"> Have anything to say? </h2>
     <input type="hidden" name="username" value={{#if name}}
     {{name}}
@@ -22,15 +27,19 @@ Hello,
 <div id = "freetfeed">
 <table class="freet-table">
 {{#each freets}}
+
    <tr><td>{{username}}</td>
    <td>{{freet}}</td>
  <!-- <td><button id="del" class = "deletebutton" currentuser={{name}} data-username={{username}} value={{id}}>Delete</button></td> -->
  <td><button id="del" class = "deletebutton" data-username = {{username}} value= {{id}}>Delete</button></td>
+ <td><button id="refreet" class = "refreetbutton" data-username = {{username}} value= {{id}}>Refreet</button></td>
+ <td><button id="follow" class = "followbutton" data-username = {{username}} value= {{id}}>Follow</button></td>
 </tr>
 {{/each}}
 </table>
 </div>
 
+<!-- JQuery script to handle a user clicking the delete button on a freet -->
 <script>
 $(document).on("click", "#del", function () {
 
@@ -38,7 +47,7 @@ $(document).on("click", "#del", function () {
             var tweetauthor = $(this).attr("data-username").trim();
             if(currentuser == tweetauthor){
               $.ajax({
-                url: '/dashboard' + '?' + $.param({"id": $(this).attr("value")}),
+                url: '/freet/' + '?' + $.param({"id": $(this).attr("value")}),
                 type: 'DELETE',
                 data: {id: $(this).attr("value")},
                 success: function(result) {
@@ -55,8 +64,67 @@ $(document).on("click", "#del", function () {
         });
 </script>
 
+<!-- JQuery script to handle a user clicking the refreet button on a freet -->
+<script>
+$(document).on("click", "#refreet", function () {
+
+            //var tweetauthor = $(this).attr("data-username").trim();
+            //var freettext = $(this).attr("data-freet").trim();
+            $.ajax({
+              url: '/freet/rf',// + '?' + $.param({"id": $(this).attr("value")}),
+              type: 'POST',
+              data: {id: $(this).attr("value")},
+              success: function(result) {
+                // Do something with the result
+                //$(this).closest('tr').remove();
+            }});
+          $('#freetfeed').load(document.URL +  ' #freetfeed');
+      });
+</script>
+
+<!-- JQuery script to handle a user clicking the follow button on a freet -->
+<script>
+$(document).on("click", "#follow", function () {
+
+            var tweetauthor = $(this).attr("data-username").trim();
+            //var freettext = $(this).attr("data-freet").trim();
+            $.ajax({
+              url: '/user/followuser',// + '?' + $.param({"id": $(this).attr("value")}),
+              type: 'POST',
+              data: {target: tweetauthor},
+              success: function(result) {
+                // Do something with the result
+                //$(this).closest('tr').remove();
+            }});
+          $('#freetfeed').load(document.URL +  ' #freetfeed');
+      });
+</script>
+
+<!-- JQuery script to handle a user clicking the logout button -->
 <script>
 $(document).on("click", "#logout", function () {
-        window.location.href= '/';
+  $.ajax({
+    url: '/user/logout',// + '?' + $.param({"id": $(this).attr("value")}),
+    type: 'POST',
+    data: {},
+    success: function(result) {
+      // Do something with the result
+      //$(this).closest('tr').remove();
+  }});
+  window.location.href= '/';
+});
+</script>
+
+<!-- JQuery script to handle a user clicking the followedfreets button -->
+<script>
+$(document).on("click", "#followedfreets", function () {
+  window.location.href = "/freet/followedtweets";
+});
+</script>
+
+<!-- JQuery script to handle a user clicking the allfreets button -->
+<script>
+$(document).on("click", "#allfreets", function () {
+  window.location.href = "/freet";
 });
 </script>

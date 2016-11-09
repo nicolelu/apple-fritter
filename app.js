@@ -2,97 +2,54 @@ var express = require("express");
 var handlebars = require("express-handlebars")
 var bodyParser = require('body-parser');
 var path = require("path");
-var persist = require("./persist.js");
-var name = "";
+var favicon = require('serve-favicon');
+var session = require('express-session');
+var cookieParser = require('cookie-parser');
+
+var routes = require('./routes/index');
+var userrouter = require('./routes/userrouter');
+var freetrouter = require('./routes/freetrouter');
+
+var usermodel = require("./models/users");
+var freetmodel = require("./models/freets");
+
+//Database setup
+var mongoose = require('mongoose');
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/activitydb');
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function (callback) {
+  console.log("database connected");
+});
 
 var app = express();
 
 app.engine('handlebars', handlebars({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
 
+app.use(session({secret: "6170secret", resave : true, saveUninitialized : true }));
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
 app.use(express.static('public'));
 
-
-
-app.get("/", function(req, res){
-    res.render('login');
+app.all('*', function(req, res, next) {
+  if(req.url == "/" && ((typeof req.session.currentuser == "undefined") || (req.session.currentuser == ""))){
+    console.log("curr user", req.session.currentuser);
+    res.render("login");
+  } else{
+    next();
+  }
 });
 
-app.get("/allfreets", function(req, res){
-    res.json(persist.getfreets());
-});
+app.use(express.static(path.join(__dirname, 'public')));
+app.use('/', routes);
+app.use('/user', userrouter);
+app.use('/freet', freetrouter);
 
-app.get("/index", function(req, res){
-  name = req.body.username;
-  res.render('index', {
-    name: req.body.username,
-    freets: persist.getfreets()
-  });
-});
+// app.listen(process.env.PORT || 3000, function() {
+//   console.log("Listening on port 3000");
+// });
 
-app.get("/dashboard", function(req, res){
-  res.render('dashboard', {
-    name: req.body.name,
-    freets: persist.getfreets()
-  });
-});
 
-app.post("/index", function(req, res){
-  res.render('index', {
-    name: req.body.name,
-    freets: persist.getfreets()
-  });
-
-});
-
-app.post("/dashboard", function(req, res){
-  var freet = persist.add(req.body.username, req.body.freet, function(res) {
-  console.log(res);
-});
-  res.render('dashboard', {
-    name: req.body.username,
-    freets: persist.getfreets()
-  });
-});
-
-app.delete("/dashboard", function(req, res){
-  var freet = persist.delete(req.body.id);
-  res.render('dashboard', {
-    name: req.body.name,
-    freets: persist.getfreets()
-  });
-});
-
-app.post("/makefreet", function(req, res){
-  var freet = persist.add(req.body.username, req.body.freet, function(res) {
-  console.log(res);
-});
-  persist.makefreet(function() {
-    res.json({"username": req.body.username, "freet": req.body.freet});
-  });
-});
-
-app.delete("/deletefreet", function(req, res){
-  var freet = persist.delete(req.body.id);
-  persist.makefreet(function() {
-    res.json({"username": req.body.username, "freet": req.body.freet});
-  });
-});
-
-app.post("/freets", function(req, res) {
-  var freet = persist.add(req.body.username, req.body.freet, function(res) {
-  console.log(res);
-});
-  persist.persist(function() {
-    res.json({"username": req.body.username, "freet": req.body.freet});
-  });
-});
-
-app.all('*', function(req, res) {
-    res.redirect("/");
-})
-
-app.listen(process.env.PORT || 3000, function() {
-  console.log("Listening on port 3000");
-});
+module.exports = app;

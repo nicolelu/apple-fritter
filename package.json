@@ -7,7 +7,8 @@
     "test": "test"
   },
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "start": "node ./bin/www"
   },
   "repository": {
     "type": "git",
@@ -18,10 +19,14 @@
   "dependencies": {
     "body-parser": "^1.15.2",
     "chance": "^1.0.4",
+    "cookie-parser": "^1.4.3",
     "express": "^4.14.0",
     "express-handlebars": "^3.0.0",
+    "express-session": "^1.14.2",
     "express3-handlebars": "^0.5.2",
     "hashmap": "^2.0.6",
-    "mocha": "^3.1.2"
+    "mocha": "^3.1.2",
+    "mongoose": "^4.6.4",
+    "serve-favicon": "^2.3.0"
   }
 }

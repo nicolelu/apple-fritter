@@ -57,7 +57,7 @@ table{
 .submitbutton{
   font-size: 25;
   color: white;
-  margin-left:50px;
+  margin-top:10px;
   height: auto;
   background-color: inherit;
 }
@@ -65,7 +65,15 @@ table{
 .deletebutton{
   font-size: 24;
   color: white;
-  margin-left:50px;
+  margin-left:5px;
+  height: auto;
+  background-color: inherit;
+}
+
+.refreetbutton{
+  font-size: 24;
+  color: white;
+  margin-left:5px;
   height: auto;
   background-color: inherit;
 }
@@ -77,8 +85,29 @@ table{
   background-color: inherit;
 }
 
+.followbutton{
+  font-size: 24;
+  color: white;
+  margin-left: 5px;
+  height: auto;
+  background-color: #4099FF;
+}
+
+.filterbutton{
+  font-size: 12;
+  color: white;
+  height: auto;
+  background-color: #4099FF;
+}
+
 .freet-table{
   font-size: 24;
+  width: 100%;
+}
+
+#freetfeed{
+  left:0;
+  right:0;
 }
 
 

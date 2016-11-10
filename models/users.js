@@ -51,7 +51,7 @@ userSchema.statics.createUser = function(uname, pass, callback){
       if (status == false && doc == "null"){
         callback(false, "The database sent back an error. Please try again!");
       }
-      else if (status == true && doc.length > 0){
+      else if (status == true){
         callback(false, "Oh no, someone beat you to this username. Please try another one!");
       }
       else{

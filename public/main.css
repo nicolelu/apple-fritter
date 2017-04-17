@@ -11,13 +11,14 @@ body {
     font-size: 16px;
     line-height: 1.5;
     margin: 0 auto;
-    max-width: 800px;
+    margin-left: 10%;
+    max-width: 1200px;
     padding: 2em 2em 4em;
 }
 
 h1, h2, h3, h4, h5, h6{
     color: #fff;
-    font-weight: 600;
+    font-weight: 400;
     line-height: 1.3;
     font-size: 60;
 }
@@ -25,12 +26,21 @@ h1, h2, h3, h4, h5, h6{
 h2 {
     margin-top: 1.3em;
     font-size: 45;
+    font-weight:200;
+}
+
+h5 {
+    margin-top: 0px;
+    font-size: 20;
+    color: #545454;
+    font-weight:200;
 }
 
 h6 {
-    margin-top: 10px;
+    margin-top: -30px;
     font-size: 20;
     color: #545454;
+    font-weight:200;
 }
 
 a {
@@ -52,6 +62,12 @@ table{
   border-style: none;
   font-size: 35;
   color: inherit;
+  font-weight:200;
+}
+
+.textinput:focus {
+  border: solid 1px skyblue;
+  box-shadow: 0 0 5px 1px skyblue;
 }
 
 .submitbutton{
@@ -60,6 +76,7 @@ table{
   margin-top:10px;
   height: auto;
   background-color: inherit;
+  font-weight:300;
 }
 
 .deletebutton{
@@ -68,14 +85,16 @@ table{
   margin-left:5px;
   height: auto;
   background-color: inherit;
+  font-weight:300;
 }
 
 .refreetbutton{
   font-size: 24;
   color: white;
-  margin-left:5px;
+  margin-left:-35px;
   height: auto;
   background-color: inherit;
+  font-weight:300;
 }
 
 .logoutbutton{
@@ -88,7 +107,7 @@ table{
 .followbutton{
   font-size: 24;
   color: white;
-  margin-left: 5px;
+  margin-left: -35px;
   height: auto;
   background-color: #4099FF;
 }
@@ -103,11 +122,13 @@ table{
 .freet-table{
   font-size: 24;
   width: 100%;
+  margin-left: -45px;
 }
 
 #freetfeed{
   left:0;
   right:0;
+  margin-left: -5px;
 }
 
 

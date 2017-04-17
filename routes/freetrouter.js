@@ -16,7 +16,9 @@ router.post("/", function(req, res, next){
       res.json({
         "message": "Storing that freet didn't work. Check it and try again!" + err,
         "success": false
-      });
+      }).render("error", {
+           msg: "That freet didn't quite work - check it and try again (freets can't be empty)"
+         });
     } else{
       res.redirect('/freet/');
     }
@@ -34,7 +36,9 @@ router.post("/rf", function(req, res, next){
       res.json({
         "message": "There was an error that prevented this refreet",
         "success": false
-      });
+      }).render("error", {
+           msg: "There was an error that prevented this refreet"
+         });
     } else{
       var t = Date.now();
       var uname = req.session.currentuser;
@@ -46,7 +50,9 @@ router.post("/rf", function(req, res, next){
                         res.json({
                           "message": "Storing that freet didn't work. Check it and try again!" + err,
                           "success": false
-                        });
+                        }).render("error", {
+                            msg: "Storing that freet didn't work. Check it and try again!" + err
+                            });
                       }
                     else{
                       res.redirect('/freet/');
